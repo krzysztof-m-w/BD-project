@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  cas1:
+    image: cassandra
+    container_name: cas1
+    networks:
+      cassandraNet:
+    ports:
+      - "127.0.0.1:9042:9042"
+    environment:
+      - CASSANDRA_LISTEN_ADDRESS=cas1
+      - CASSANDRA_BROADCAST_ADDRESS=cas1
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=cas1
+      - CASSANDRA_SEEDS=cas1
+
+  cas2:
+    image: cassandra
+    container_name: cas2
+    networks:
+      cassandraNet:
+    ports:
+      - "127.0.0.2:9042:9042"
+    environment:
+      - CASSANDRA_LISTEN_ADDRESS=cas2
+      - CASSANDRA_BROADCAST_ADDRESS=cas2
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=cas2
+      - CASSANDRA_SEEDS=cas1
+
+  cas3:
+    image: cassandra
+    container_name: cas3
+    networks:
+      cassandraNet:
+    ports:
+      - "127.0.0.3:9042:9042"
+    environment:
+      - CASSANDRA_LISTEN_ADDRESS=cas3
+      - CASSANDRA_BROADCAST_ADDRESS=cas3
+      - CASSANDRA_BROADCAST_RPC_ADDRESS=cas3
+      - CASSANDRA_SEEDS=cas1
+
+networks:
+  cassandraNet:
+    driver: bridge
