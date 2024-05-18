@@ -14,7 +14,7 @@ create_seats_table_query = """CREATE TABLE IF NOT EXISTS seats(
         room_id int, 
         row text, 
         seat_number int,  
-        PRIMARY KEY(room_id, id)
+        PRIMARY KEY(room_id, row, seat_number)
     );"""
 
 session.execute(create_seats_table_query)
@@ -24,7 +24,7 @@ create_reservations_table_query = """CREATE TABLE IF NOT EXISTS reservations(
     seat_id int,
     room_id int,
     user_id int,
-    PRIMARY KEY(id, seat_id, room_id)
+    PRIMARY KEY(room_id, seat_id, id)
 );
 """
 
