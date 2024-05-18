@@ -1,9 +1,10 @@
 from cassandra.cluster import Cluster
+import time
 
 cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042)
 session = cluster.connect('cinema')
 
-def add_reservation(room_id, row_, seat_number, user_id):
+def add_reservation(room_id, row_, seat_number, user_id, user_counter):
     select_query1 = f"""SELECT id FROM seats 
     WHERE room_id = {room_id} AND row = '{row_}' AND seat_number = {seat_number};
     """
@@ -20,10 +21,14 @@ def add_reservation(room_id, row_, seat_number, user_id):
         result2 = session.execute(select_query2)
         if not result2.all():
             insert_query = f"""INSERT INTO reservations (id, room_id, seat_id, user_id)
-            VALUES (0, {room_id}, {seat_id}, {user_id})"""
+            VALUES ({int((1 << 32)*user_id)+user_counter}, {room_id}, {seat_id}, {user_id})"""
             session.execute(insert_query)
             
         else:
             print('Seat already reserved')
         
-    
+
+add_reservation(1, 'A', 2, 1, 0)
+
+session.shutdown()
+cluster.shutdown()

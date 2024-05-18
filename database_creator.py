@@ -20,7 +20,7 @@ create_seats_table_query = """CREATE TABLE IF NOT EXISTS seats(
 session.execute(create_seats_table_query)
 
 create_reservations_table_query = """CREATE TABLE IF NOT EXISTS reservations(
-    id int,
+    id bigint,
     seat_id int,
     room_id int,
     user_id int,
