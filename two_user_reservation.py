@@ -5,19 +5,22 @@ import threading
 import string
 
 def reserve_all_seats(user_id, session):
+    selection_query = 'select * from seats;'
+    result = session.execute(selection_query)
     counter = 0
-    for room_id in range(1, ROOMS+1):
-        for row in string.ascii_uppercase[:ROWS]:
-            for seat_number in range(1, SEATS_IN_ROW+1):
-                add_reservation(room_id, row, seat_number, user_id, counter, session)
-                counter += 1
+    for row in result:
+        add_reservation(row.room_id, row.row, row.seat_number, user_id, counter, session)
+        counter += 1
 
-cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042)
-session = cluster.connect('cinema')
+cluster1 = Cluster(['127.0.0.2'], port=9042)
+session1 = cluster1.connect('cinema')
+
+cluster2 = Cluster(['127.0.0.3'], port=9042)
+session2 = cluster2.connect('cinema')
 
 print("start reserving")
-t1 = threading.Thread(target=reserve_all_seats, args=(1, session))
-t2 = threading.Thread(target=reserve_all_seats, args=(2, session))
+t1 = threading.Thread(target=reserve_all_seats, args=(1, session1))
+t2 = threading.Thread(target=reserve_all_seats, args=(2, session2))
 t1.start()
 t2.start()
 
@@ -25,7 +28,7 @@ t1.join()
 t2.join()
 
 query = "select user_id from reservations;"
-result = session.execute(query)
+result = session1.execute(query)
 count1 = 0
 count2 = 0
 for row in result:
@@ -39,8 +42,10 @@ print(f"user2 reserved {count2} seats")
 
 for room_id in range(1, ROOMS+1):
     query1 = f"delete from reservations where room_id = {room_id};"
-    session.execute(query1)
+    session1.execute(query1)
 
 
-session.shutdown()
-cluster.shutdown()
+session1.shutdown()
+cluster1.shutdown()
+session2.shutdown()
+cluster2.shutdown()

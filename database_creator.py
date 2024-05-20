@@ -1,9 +1,9 @@
 from cassandra.cluster import Cluster
 import string
 
-ROOMS = 2
-ROWS = 4
-SEATS_IN_ROW = 4
+ROOMS = 10
+ROWS = 10
+SEATS_IN_ROW = 10
 
 
 cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042)
@@ -24,7 +24,7 @@ create_reservations_table_query = """CREATE TABLE IF NOT EXISTS reservations(
     seat_id int,
     room_id int,
     user_id int,
-    PRIMARY KEY(room_id, seat_id, id)
+    PRIMARY KEY(room_id, seat_id)
 );
 """
 

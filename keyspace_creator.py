@@ -5,7 +5,7 @@ session = cluster.connect()
 
 create_keyspace_query = """
 CREATE KEYSPACE IF NOT EXISTS cinema
-WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
+WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 2 }
 """
 
 session.execute(create_keyspace_query)
