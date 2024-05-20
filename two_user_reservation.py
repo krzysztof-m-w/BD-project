@@ -1,8 +1,19 @@
-from cassandra.cluster import Cluster
+from cassandra import ConsistencyLevel
+from cassandra.cluster import Cluster, ExecutionProfile, EXEC_PROFILE_DEFAULT
+from cassandra.policies import DowngradingConsistencyRetryPolicy
+from cassandra.query import tuple_factory
 from add_reservation import add_reservation
 from database_creator import ROOMS, SEATS_IN_ROW, ROWS
 import threading
-import string
+
+
+profile = ExecutionProfile(
+    retry_policy=DowngradingConsistencyRetryPolicy(),
+    consistency_level=ConsistencyLevel.ONE,
+    serial_consistency_level=ConsistencyLevel.LOCAL_SERIAL,
+    request_timeout=20,
+    row_factory=tuple_factory
+)
 
 def reserve_all_seats(user_id, session):
     selection_query = 'select * from seats;'
@@ -12,10 +23,10 @@ def reserve_all_seats(user_id, session):
         add_reservation(row.room_id, row.row, row.seat_number, user_id, counter, session)
         counter += 1
 
-cluster1 = Cluster(['127.0.0.2'], port=9042)
+cluster1 = Cluster(['127.0.0.2'], port=9042, execution_profiles={'default' : profile})
 session1 = cluster1.connect('cinema')
 
-cluster2 = Cluster(['127.0.0.3'], port=9042)
+cluster2 = Cluster(['127.0.0.3'], port=9042, execution_profiles={'default' : profile})
 session2 = cluster2.connect('cinema')
 
 print("start reserving")
