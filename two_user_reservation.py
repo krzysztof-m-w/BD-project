@@ -5,6 +5,7 @@ from cassandra.query import tuple_factory
 from add_reservation import add_reservation
 from database_creator import ROOMS, SEATS_IN_ROW, ROWS
 import threading
+import time
 
 
 profile = ExecutionProfile(
@@ -32,11 +33,14 @@ session2 = cluster2.connect('cinema')
 print("start reserving")
 t1 = threading.Thread(target=reserve_all_seats, args=(1, session1))
 t2 = threading.Thread(target=reserve_all_seats, args=(2, session2))
+
+start_time = time.time()
 t1.start()
 t2.start()
 
 t1.join()
 t2.join()
+end_time = time.time()
 
 query = "select user_id from reservations;"
 result = session1.execute(query)
@@ -50,6 +54,7 @@ for row in result:
 
 print(f"user1 reserved {count1} seats")
 print(f"user2 reserved {count2} seats")
+print(f"execution time: {end_time - start_time}")
 
 for room_id in range(1, ROOMS+1):
     query1 = f"delete from reservations where room_id = {room_id};"
