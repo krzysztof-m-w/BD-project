@@ -33,7 +33,7 @@ session.execute(create_reservations_table_query)
 id = 0
 for room_id in range(1, ROOMS+1):
     for row in string.ascii_uppercase[:ROWS]:
-        for seat_number in range(1, SEATS_IN_ROW):
+        for seat_number in range(1, SEATS_IN_ROW+1):
 
             add_query = f"""INSERT INTO seats
             (id, room_id, row, seat_number) VALUES
