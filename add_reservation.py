@@ -35,7 +35,13 @@ def add_reservation(room_id, row_, seat_number, user_id, user_counter, session):
         VALUES ({int((1 << 32)*user_id)+user_counter}, {room_id}, {seat_id}, {user_id})"""
         session.execute(insert_query)
 
+def remove_reservation(room_id, row_, seat_number, user_id, session):
 
+    seat_exists, is_reserved, seat_id,  data = get_reservation(room_id, row_, seat_number, session)
+
+    if seat_exists and is_reserved and user_id == data.user_id:
+        delete_query = f"""DELETE  FROM Reservations WHERE room_id = {room_id} AND seat_id = {seat_id}"""
+        session.execute(delete_query)
         
 
 if __name__ == "__main__":
@@ -46,6 +52,7 @@ if __name__ == "__main__":
     print(get_reservation(-1, 'A', 2, session))
     print(get_reservation(2, 'A', 2, session))
     print(get_reservation(1, 'A', 2, session))
+    remove_reservation(1, 'A', 2, 1, session)
 
     session.shutdown()
     cluster.shutdown()
