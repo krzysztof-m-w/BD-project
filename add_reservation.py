@@ -73,7 +73,7 @@ def alter_reservation(room_id, row_, seat_number, user_id, session, altered_fiel
         
 
 if __name__ == "__main__":
-    cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042)
+    cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9042)
     session = cluster.connect('cinema')
 
     add_reservation(1, 'A', 2, 1, 0, session)

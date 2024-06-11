@@ -6,7 +6,7 @@ ROWS = 10
 SEATS_IN_ROW = 10
 
 
-cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042)
+cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9042)
 session = cluster.connect('cinema')
 
 create_seats_table_query = """CREATE TABLE IF NOT EXISTS seats( 
