@@ -45,8 +45,8 @@ def add_reservation(room_id, row_, seat_number, user_id, user_counter, session, 
     if seat_exists and not is_reserved:
         field_names, field_values = parse_data_fields(data_fields)
 
-        insert_query = f"""INSERT INTO reservations (id, room_id, seat_id, user_id)
-        VALUES ({int((1 << 32)*user_id)+user_counter}, {room_id}, {seat_id}, {user_id})"""
+        insert_query = f"""INSERT INTO reservations (id, room_id, seat_id, user_id {field_names})
+        VALUES ({int((1 << 32)*user_id)+user_counter}, {room_id}, {seat_id}, {user_id} {field_values})"""
         session.execute(insert_query)
 
 def remove_reservation(room_id, row_, seat_number, user_id, session):
