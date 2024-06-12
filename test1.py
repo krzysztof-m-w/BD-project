@@ -14,12 +14,12 @@ profile = ExecutionProfile(
     row_factory=tuple_factory
 )
 
-cluster = Cluster(['127.0.0.2', '127.0.0.3', '127.0.0.4'], port=9042, execution_profiles={'default' : profile})
+cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9042, execution_profiles={'default' : profile})
 session = cluster.connect('cinema')
 
 start_time = time.time()
 for _ in range(10000):
-    add_reservation(1, 'A', 1, 1, 0, session, {})
+    add_reservation(1, 1, 1, 1, 0, session, {})
 end_time = time.time()
 
 print(f"execution time: {end_time - start_time}")

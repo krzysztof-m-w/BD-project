@@ -15,7 +15,7 @@ def parse_data_fields(fields : dict):
 
 def get_reservation(room_id, row_, seat_number, session):
     select_query1 = f"""SELECT id FROM seats 
-    WHERE room_id = {room_id} AND row = '{row_}' AND seat_number = {seat_number};
+    WHERE room_id = {room_id} AND row = {row_} AND seat_number = {seat_number};
     """
 
     result1 = session.execute(select_query1).all()
@@ -76,8 +76,8 @@ if __name__ == "__main__":
     cluster = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9042)
     session = cluster.connect('cinema')
 
-    add_reservation(1, 'A', 2, 1, 0, session)
-    alter_reservation(1, 'A', 2, 1, session, {'discount' : 0})
+    add_reservation(1, 1, 2, 1, 0, session, {})
+    alter_reservation(1, 1, 2, 1, session, {'discount' : 0})
 
     session.shutdown()
     cluster.shutdown()

@@ -12,7 +12,7 @@ session = cluster.connect('cinema')
 create_seats_table_query = """CREATE TABLE IF NOT EXISTS seats( 
         id int, 
         room_id int, 
-        row text, 
+        row int, 
         seat_number int,  
         PRIMARY KEY(room_id, row, seat_number)
     );"""
@@ -24,6 +24,7 @@ create_reservations_table_query = """CREATE TABLE IF NOT EXISTS reservations(
     seat_id int,
     room_id int,
     user_id int,
+    discount int,
     PRIMARY KEY(room_id, seat_id)
 );
 """
@@ -32,12 +33,12 @@ session.execute(create_reservations_table_query)
 
 id = 0
 for room_id in range(1, ROOMS+1):
-    for row in string.ascii_uppercase[:ROWS]:
+    for row in range(1, ROWS+1):
         for seat_number in range(1, SEATS_IN_ROW+1):
 
             add_query = f"""INSERT INTO seats
             (id, room_id, row, seat_number) VALUES
-            ({id}, {room_id}, '{row}', {seat_number});"""
+            ({id}, {room_id}, {row}, {seat_number});"""
             
             session.execute(add_query)
             id += 1
