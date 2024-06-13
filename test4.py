@@ -20,7 +20,7 @@ session = cluster.connect('cinema')
 start_time = time.time()
 c = 0
 for _ in range(1000):
-    add_reservation(1, 1, 1, 1, c, session, {})
+    r=add_reservation(1, 1, 1, 1, c, session, {})
     remove_reservation(1, 1, 1, 1, session)
     c += 1
 

@@ -38,16 +38,16 @@ def get_reservation(room_id, row_, seat_number, session):
     return (True, True, seat_id, (result2[0]))
 
 
-def add_reservation(room_id, row_, seat_number, user_id, user_counter, session, data_fields):
-    
+def add_reservation(room_id, row_, seat_number, user_id, user_counter, session, data_fields={}):
     seat_exists, is_reserved, seat_id,  data = get_reservation(room_id, row_, seat_number, session)
 
     if seat_exists and not is_reserved:
         field_names, field_values = parse_data_fields(data_fields)
-
         insert_query = f"""INSERT INTO reservations (id, room_id, seat_id, user_id {field_names})
-        VALUES ({int((1 << 32)*user_id)+user_counter}, {room_id}, {seat_id}, {user_id} {field_values})"""
-        session.execute(insert_query)
+        VALUES ({user_id+user_counter}, {room_id}, {seat_id}, {user_id} {field_values})"""
+    
+        result=session.execute(insert_query)
+        return result
 
 def remove_reservation(room_id, row_, seat_number, user_id, session):
 

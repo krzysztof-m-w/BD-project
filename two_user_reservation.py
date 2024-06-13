@@ -21,7 +21,7 @@ def reserve_all_seats(user_id, session):
     result = session.execute(selection_query)
     counter = 0
     for row in result:
-        add_reservation(row.room_id, row.row, row.seat_number, user_id, counter, session, {})
+        r=add_reservation(row.room_id, row.row, row.seat_number, user_id, counter, session, {})
         counter += 1
 
 cluster1 = Cluster(['127.0.0.1', '127.0.0.2', '127.0.0.3'], port=9042, execution_profiles={'default' : profile})
